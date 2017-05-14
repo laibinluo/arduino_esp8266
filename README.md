@@ -3,12 +3,24 @@
 ## 硬件：
   ##### arduino uno r3 + esp8266_01
   物理线路连接
-  1.  arduino                  esp8266
-      V3.3                       V3.3
-      D10（软串口）                        TXD
-      D11（软串口）                        RXD
-      V3.3                       CH_PD
-      GND                        GND
+<table>
+        <tr>
+            <th>Arduino</th>
+            <th>v3.3</th>
+            <th>v3.3</th>
+            <th>D10</th>
+            <th>D11</th>
+            <th>GND</th>
+        </tr>
+        <tr>
+            <th>esp8266_01</th>
+            <th>v3.3</th>
+            <th>CH_PD</th>
+            <th>TXD</th>
+            <th>RXD</th>
+            <th>GND</th>
+        </tr>        
+    </table>
       
 
 
