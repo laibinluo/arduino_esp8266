@@ -32,7 +32,7 @@
 
 已完成手机app远程控制arduino开关灯逻辑
 app 源代码： https://github.com/laibinluo/Arduino_Esp8266_android
-操作方式： 
+#### 操作方式： 
 手机app 安装apk，手机连接 esp8662 WIFI
 点击连接， 即可发送灯亮，灯灭控制
 
