@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
- 
+int ledPin = 4;
 SoftwareSerial mySerial(10, 11); // RX, TX
 bool flag = false;
 int status = 0;
@@ -7,6 +7,7 @@ void startServer();
 String data;
 void setup() {
   // Open serial communications and wait for port to open:
+  pinMode(ledPin, OUTPUT);
   Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
@@ -21,6 +22,7 @@ void setup() {
   mySerial.println("AT+RST");
   delay(3000);
   startServer();
+  delay(3000);
 
  /*while (1) {                            //当串口有完成数据返回时，结束语句     
      if(mySerial.find("Technologcy")==true)
@@ -41,8 +43,15 @@ void setup() {
  int error;
  String str;
  int closed;
+ int rec = -1;
  
 void loop() { // run over and over   
+  /*if (mySerial.available()) {
+    Serial.write(mySerial.read());
+  }
+  if (Serial.available()) {
+    mySerial.write(Serial.read());
+  }*/
   if(flag){
     flag = false;
     switch(status){
@@ -54,11 +63,15 @@ void loop() { // run over and over
       break;
     case 2:
       mySerial.println("AT+CIPSERVER=1,1212"); 
-      Serial.println("AT+CIPSERVER=1,1212");   
+      //Serial.println("AT+CIPSERVER=1,1212");   
       delay(2000);  
       break;  
     case 3:
-      // 接受数据      
+      // 接受数据  
+      if (mySerial.available()){
+         str = mySerial.readString(); 
+         Serial.print(str);         
+      }
       break;          
     }
   }
@@ -69,9 +82,21 @@ void loop() { // run over and over
       index = str.lastIndexOf('K');    
       error = str.lastIndexOf('R'); 
       closed = str.lastIndexOf("CLOSED");
-      Serial.print(str);
-      Serial.print("closed: ");    
-      Serial.println(closed);
+      rec = str.lastIndexOf(":");
+      Serial.println(str);
+      if(rec > 1){
+         Serial.print("rec ; ");
+         Serial.println(rec );
+         Serial.println(str.substring(rec+1, rec+2));
+         String c = str.substring(rec+1, rec+2);
+         if(c == "1"){
+             digitalWrite(ledPin, HIGH);
+         }else if(c == "0"){
+             digitalWrite(ledPin, LOW);
+         }
+      }
+      //Serial.print("closed: ");    
+      //Serial.println(closed);
       if(index > 1 ){
           Serial.println("++++++++++++++++++++++");
           if(str.substring(index -1, index+1) == "OK"){
@@ -91,7 +116,7 @@ void loop() { // run over and over
           }
       }else if(str.lastIndexOf("CLOSED") >= 0 ){
           flag = true;
-          Serial.println("TCP DONE !");
+          //Serial.println("TCP DONE !");
       }
   
   /*if (Serial.available()) {
@@ -104,6 +129,7 @@ void loop() { // run over and over
 // 开机启动设置esp8266为 AP 模式
 void startServer(){       
   mySerial.println("AT+CIPMUX=1");  
+  //mySerial.println("AT+CWJAP="\"\"");  
   //if (mySerial.available()) {
   //   Serial.println(mySerial.readString()); 
   //   if
